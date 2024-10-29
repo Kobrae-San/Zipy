@@ -1,0 +1,26 @@
+name: zipy
+
+services:
+  database:
+    image: mariadb:11
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_NAME}
+
+  server:
+    image: node:23
+    env_file:
+      - ./.env
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./server:/server
+    command: 'sh -c "cd /server && npm run start"'
+
+volumes:
+  db_data:
