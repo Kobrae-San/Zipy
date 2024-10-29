@@ -22,5 +22,14 @@ services:
       - ./server:/server
     command: 'sh -c "cd /server && npm run start"'
 
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./client:/client
+
 volumes:
   db_data:
