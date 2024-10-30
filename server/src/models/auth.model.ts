@@ -1,18 +1,28 @@
-import { pool } from "../configs/database.config";
+import { client } from "../configs/database.config";
 
 export async function RegisterModel(nickname: string, password: string) {
   console.log("coucou");
-  return await pool.execute(
+  return await client.query(
     `
-        INSERT INTO users (nickname, password)  VALUES (?, ?);
+        INSERT INTO users (nickname, password)  VALUES ($1, $2);
     `,
     [nickname, password]
   );
 }
 
-export async function LoginModel(nickname: string, password: string) {
-  return pool.execute(
-      `SELECT * FROM users WHERE nickname = ?;
-    `, [nickname]
+export async function LoginModel(nickname: string) {
+  return client.query(
+    `SELECT * FROM users WHERE nickname = $1;
+      `,
+    [nickname]
+  );
+}
+
+export async function GetUserCredentials(nickname: string) {
+  return await client.query(
+    `
+        SELECT nickname, password FROM users WHERE nickname = $1
+    `,
+    [nickname]
   );
 }
