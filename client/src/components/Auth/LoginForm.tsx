@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
+import { toast } from "@/hooks/use-toast.ts";
 
 export default function LoginForm() {
     const [nickname, setNickname] = useState('');
@@ -23,11 +24,18 @@ export default function LoginForm() {
             });
 
             if (!response.ok) {
+                toast({
+                    variant: "destructive",
+                    description: "Login failed",
+                })
                 throw new Error('Login failed');
             }
 
             const data = await response.json();
-
+            toast({
+                className: "bg-green-500 text-white",
+                description: "Login successful",
+            })
             navigate('/');
         } catch (error) {
             console.error('Login error:', error);

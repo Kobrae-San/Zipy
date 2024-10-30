@@ -1,13 +1,51 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "@/hooks/use-toast.ts";
 
 export default function RegisterForm() {
-    const handleSubmit = (e: React.FormEvent) => {
+    const [nickname, setNickname] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (password !== confirmPassword) {
+            console.error('Passwords do not match');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://127.0.0.1:3000/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ nickname, password }),
+            });
+
+            if (!response.ok) {
+                toast({
+                    variant: "destructive",
+                    description: "Registration failed",
+                })
+                throw new Error('Registration failed');
+            }
+
+            const data = await response.json();
+            toast({
+                className: "bg-green-500 text-white",
+                description: "Registration successful",
+            })
+            navigate('/');
+        } catch (error) {
+            console.error('Registration error:', error);
+        }
     };
 
     return (
@@ -23,6 +61,7 @@ export default function RegisterForm() {
                             id="nickname"
                             type="text"
                             placeholder="Choose a nickname"
+                            onChange={(e) => setNickname(e.target.value)}
                             required
                         />
                     </div>
@@ -33,6 +72,7 @@ export default function RegisterForm() {
                             id="password"
                             type="password"
                             placeholder="Create a password"
+                            onChange={(e) => setPassword(e.target.value)}
                             required
                         />
                     </div>
@@ -43,6 +83,7 @@ export default function RegisterForm() {
                             id="confirmPassword"
                             type="password"
                             placeholder="Confirm your password"
+                            onChange={(e) => setConfirmPassword(e.target.value)}
                             required
                         />
                     </div>
