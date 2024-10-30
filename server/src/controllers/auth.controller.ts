@@ -1,5 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { LoginModel, RegisterModel } from "../models/auth.model";
+import {
+  LoginModel,
+  RegisterModel,
+  GetUserCredentials,
+} from "../models/auth.model";
 import bcrypt from "bcrypt";
 
 export async function Register(
@@ -20,17 +24,13 @@ export async function Register(
   }
 }
 
-export async function Login(
-    req: Request,
-    res: Response,
-    next: NextFunction
-) {
+export async function Login(req: Request, res: Response, next: NextFunction) {
   try {
     const { nickname, password } = req.body;
     if (!nickname || !password) {
       return res.status(400).json({
         success: false,
-        message: "Nickname and password are required"
+        message: "Nickname and password are required",
       });
     }
 
@@ -38,7 +38,7 @@ export async function Login(
     if (userResults.length === 0) {
       return res.status(401).json({
         success: false,
-        message: "Invalid nickname or password"
+        message: "Invalid nickname or password",
       });
     }
 
@@ -47,7 +47,7 @@ export async function Login(
     if (!passwordMatch) {
       return res.status(401).json({
         success: false,
-        message: "Invalid nickname or password"
+        message: "Invalid nickname or password",
       });
     }
 
@@ -55,10 +55,27 @@ export async function Login(
       success: true,
       message: "Login successful",
       data: {
-        user: { id: user.id, nickname: user.nickname }
-      }
+        user: { id: user.id, nickname: user.nickname },
+      },
     });
   } catch (error) {
     next(error);
+  }
+}
+export async function GetCredentials(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { nickname, password } = req.body;
+    const test = await GetUserCredentials(nickname);
+    console.log(test);
+
+    res.json({
+      message: test,
+    });
+  } catch (error) {
+    console.log(error);
   }
 }
