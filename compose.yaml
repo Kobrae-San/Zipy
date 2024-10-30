@@ -13,23 +13,28 @@ services:
       MYSQL_DATABASE: ${DATABASE_NAME}
 
   server:
-    image: node:23
+    build:
+      context: ./server
+      dockerfile: Dockerfile
     env_file:
       - ./.env
     ports:
       - "3000:3000"
     volumes:
-      - ./server:/server
-    command: 'sh -c "cd /server && npm run start"'
+      - ./server:/app/
+      - /app/node_modules
 
   client:
     build:
       context: ./client
       dockerfile: Dockerfile
+    env_file:
+      - ./.env
     ports:
-      - "8080:8080"
+      - "4124:4124"
     volumes:
-      - ./client:/client
+      - ./client:/app/
+      - /app/node_modules
 
 volumes:
   db_data:

@@ -8,8 +8,6 @@ RUN npm ci
 
 COPY . .
 
-EXPOSE 4124
-
-ENV VITE_HOST=0.0.0.0
+EXPOSE 3000
 
 CMD [ "npm", "run", "dev" ]
