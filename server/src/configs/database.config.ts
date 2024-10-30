@@ -1,25 +1,28 @@
-import mysql from "mysql2/promise";
-import { envConfig } from "./env.config";
-import { Connection } from "mysql2";
+import pg from "pg";
 
+import { envConfig } from "./env.config";
+
+const { Pool } = pg;
 envConfig();
 
 const databaseConfig = async () => {
-  const pool = await mysql.createConnection({
+  const pool = new Pool({
     host: process.env.DATABASE_HOST,
     user: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
   });
-  return pool;
+
+  const client = await pool.connect();
+  return client;
 };
 
-export const connectionDatabase = async (pool: mysql.Connection) => {
+export const connectionDatabase = async (client: pg.PoolClient) => {
   try {
-    await pool.query("SELECT 1");
+    await client.query("SELECT 1");
   } catch (error) {
     console.error(error);
   }
 };
 
-export const pool: mysql.Connection = await databaseConfig();
+export const client: pg.PoolClient = await databaseConfig();
