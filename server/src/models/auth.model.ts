@@ -9,3 +9,10 @@ export async function RegisterModel(nickname: string, password: string) {
     [nickname, password]
   );
 }
+
+export async function LoginModel(nickname: string, password: string) {
+  return pool.execute(
+      `SELECT * FROM users WHERE nickname = ?;
+    `, [nickname]
+  );
+}
