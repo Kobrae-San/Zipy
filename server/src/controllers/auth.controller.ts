@@ -1,9 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import {
-  LoginModel,
-  RegisterModel,
-  GetUserCredentials,
-} from "../models/auth.model";
+import { LoginModel, RegisterModel } from "../models/auth.model";
 import bcrypt from "bcrypt";
 
 export async function Register(
@@ -17,10 +13,11 @@ export async function Register(
     const newUser = await RegisterModel(nickname, passwordToRegister);
 
     res.json({
-      user: newUser,
+      success: true,
+      message: "User successfully registered.",
     });
   } catch (error) {
-    next(error);
+    next(`Error while trying to create user: ${error}`);
   }
 }
 
@@ -61,22 +58,5 @@ export async function Login(req: Request, res: Response, next: NextFunction) {
     });
   } catch (error) {
     next(error);
-  }
-}
-export async function GetCredentials(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const { nickname, password } = req.body;
-    const test = await GetUserCredentials(nickname);
-    console.log(test);
-
-    res.json({
-      message: test,
-    });
-  } catch (error) {
-    console.log(error);
   }
 }
