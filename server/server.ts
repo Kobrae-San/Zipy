@@ -6,7 +6,7 @@ import { connectionDatabase, pool } from "./src/configs/database.config";
 envConfig();
 await connectionDatabase(pool);
 
-const PORT = process.env.SERVER_PORT;
+const PORT: number = process.env.SERVER_PORT ? parseInt(process.env.SERVER_PORT) : 3000;
 const app = Express();
 
 app.use(Express.json());
