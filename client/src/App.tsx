@@ -3,6 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { Button } from "@/components/ui/button.tsx";
+import { toast } from "@/hooks/use-toast.ts";
 
 function App() {
   const [count, setCount] = useState(0)
@@ -21,6 +22,15 @@ function App() {
       <div className="card">
         <Button onClick={() => setCount((count) => count + 1)}>
           count is {count}
+        </Button>
+
+          <Button onClick={() => {
+              toast({
+                  title: "Scheduled: Catch up",
+                  description: "Friday, February 10, 2023 at 5:57 PM",
+              })
+          }}>
+          Toast
         </Button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
