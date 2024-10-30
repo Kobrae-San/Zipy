@@ -35,14 +35,15 @@ export async function Login(req: Request, res: Response, next: NextFunction) {
     }
 
     const userResults = await LoginModel(nickname);
-    if (userResults.length === 0) {
+
+    if (userResults.rows[0].length === 0) {
       return res.status(401).json({
         success: false,
         message: "Invalid nickname or password",
       });
     }
 
-    const user = userResults[0][0];
+    const user = userResults.rows[0];
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
       return res.status(401).json({
