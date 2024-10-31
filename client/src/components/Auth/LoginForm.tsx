@@ -31,9 +31,6 @@ export default function LoginForm() {
                 })
             }
 
-
-            const data = await response.json();
-
             toast({
                 className: "bg-green-500 text-white",
                 description: "Login successful",

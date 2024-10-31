@@ -35,7 +35,7 @@ export async function Login(req: Request, res: Response, next: NextFunction) {
 
     const userResults = await LoginModel(nickname);
 
-    if (userResults.rows[0].length === 0) {
+    if (userResults.rows[0]?.length === 0) {
       return res.status(401).json({
         success: false,
         message: "Invalid nickname or password",
@@ -43,6 +43,12 @@ export async function Login(req: Request, res: Response, next: NextFunction) {
     }
 
     const user = userResults.rows[0];
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid nickname or password",
+      });
+    }
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
       return res.status(401).json({
@@ -57,15 +63,12 @@ export async function Login(req: Request, res: Response, next: NextFunction) {
       { expiresIn: JWT_EXPIRES_IN }
     );
 
-    const timer = new Date();
-    timer.setMinutes(timer.getMinutes() + 5);
-
     res.cookie("token", token, {
       secure: true,
       partitioned: true,
       sameSite: "none",
       httpOnly: true,
-      maxAge: 60 * 5 * 1000,
+      maxAge: 60 * 500 * 1000,
     })
 
     return res

@@ -1,5 +1,7 @@
-import Express, { Request, Response, NextFunction, Router } from "express";
+import { Request, Response, NextFunction, Router } from "express";
 import authRouter from "./auth.routes";
+import { verifyToken } from "../middlewares/auth.middleware";
+import privateRouter from "./private.routes";
 
 const router = Router();
 
@@ -10,5 +12,9 @@ router.get("/", (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.use("/auth", authRouter);
+
+router.use(verifyToken);
+
+router.use("/private", privateRouter);
 
 export default router;

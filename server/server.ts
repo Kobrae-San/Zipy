@@ -1,4 +1,4 @@
-import Express, { Request, Response, NextFunction } from "express";
+import express from "express";
 import router from "./src/routes/router";
 import { envConfig } from "./src/configs/env.config";
 import { connectionDatabase, client } from "./src/configs/database.config";
@@ -11,7 +11,7 @@ await connectionDatabase(client);
 const PORT: number = process.env.SERVER_PORT
   ? parseInt(process.env.SERVER_PORT)
   : 3000;
-const app = Express();
+const app = express();
 
 app.use(
   cors({
@@ -21,8 +21,7 @@ app.use(
 );
 
 app.use(cookieParser());
-
-app.use(Express.json());
+app.use(express.json());
 app.use("/api", router);
 
 app.listen(PORT, "0.0.0.0", () => {
