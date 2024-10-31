@@ -13,7 +13,7 @@ router.get("/", (req: Request, res: Response, next: NextFunction) => {
 
 router.use("/auth", authRouter);
 
-router.use(verifyToken);
+// router.use(verifyToken);
 
 router.use("/private", privateRouter);
 
