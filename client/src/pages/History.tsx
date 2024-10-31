@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast.ts";
+import HistoryList from "@/components/HistoryList.tsx";
 
 export default function History() {
     const [data, setData] = useState(null);
@@ -33,12 +34,8 @@ export default function History() {
     }, [navigate]);
 
     return (
-        <>
-            <div className="flex-1 flex items-center justify-center p-4">
-                <div className="w-full">
-                    <h1>History</h1>
-                </div>
-            </div>
-        </>
+        <div className="container mx-auto p-8 max-w-4xl text-center">
+            <HistoryList/>
+        </div>
     )
 }

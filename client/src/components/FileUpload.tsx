@@ -30,16 +30,16 @@ export default function FileUpload({ isAuthenticated }: FileUploadProps) {
         formData.append('file', file);
 
         try {
-            // const response = await fetch('/api/upload', {
-            //     method: 'POST',
-            //     body: formData,
-            // });
+            const response = await fetch('http://127.0.0.1/api/private/upload', {
+                method: 'POST',
+                body: formData,
+            });
 
-            // if (!response.ok) {
-            //     throw new Error('Upload failed');
-            // }
-            //
-            // const data = await response.json();
+            if (!response.ok) {
+                throw new Error('Upload failed');
+            }
+
+            const data = await response.json();
             toast({
                 description: "File uploaded successfully!",
                 className: 'bg-green-500 text-white',

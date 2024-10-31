@@ -96,7 +96,6 @@ export function Logout(req: Request, res: Response, next: NextFunction) {
 
 export function isLogin(req: Request, res: Response, next: NextFunction) {
   const token = req.cookies.token;
-  console.log(token)
   if (!token) {
       return res.status(401).json({
           success: false,
