@@ -12,6 +12,6 @@ CREATE TABLE files (
    file_name VARCHAR(255) NOT NULL,
    file_data BYTEA NOT NULL,
    file_size BIGINT NOT NULL,
-   mime_type VARCHAR(100)
+   mime_type VARCHAR(100),
    uploaded_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
