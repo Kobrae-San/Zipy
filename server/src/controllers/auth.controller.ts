@@ -62,9 +62,10 @@ export async function Login(req: Request, res: Response, next: NextFunction) {
 
     return res
       .status(200)
-      .cookie("jwt", JSON.stringify(token), {
+      .cookie("token", token, {
+        sameSite: true,
         httpOnly: true,
-        expires: timer,
+        maxAge: 60 * 5 * 1000,
       })
       .json({
         success: true,
@@ -74,8 +75,7 @@ export async function Login(req: Request, res: Response, next: NextFunction) {
           id: user.id,
           nickname: user.nickname,
         },
-      })
-      .send();
+      });
   } catch (error) {
     next(error);
   }
