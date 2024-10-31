@@ -8,7 +8,7 @@ CREATE TABLE users (
 
 CREATE TABLE files (
    id SERIAL PRIMARY KEY,
-   id_user INT NOT NULL,
+   id_user INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
    file_name VARCHAR(255) NOT NULL,
    file_data BYTEA NOT NULL,
    file_size BIGINT NOT NULL,
