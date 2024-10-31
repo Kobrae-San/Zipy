@@ -37,7 +37,6 @@ export default function History() {
             <div className="flex-1 flex items-center justify-center p-4">
                 <div className="w-full">
                     <h1>History</h1>
-                    {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
                 </div>
             </div>
         </>

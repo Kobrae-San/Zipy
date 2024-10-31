@@ -7,7 +7,7 @@ import router from "@/pages/router.tsx";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-     <RouterProvider router={router} />
-    <Toaster/>
+          <RouterProvider router={router} />
+          <Toaster/>
   </StrictMode>,
 )

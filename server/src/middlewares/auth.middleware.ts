@@ -8,7 +8,6 @@ export function verifyToken(
   next: NextFunction
 ) {
   const token = req.cookies?.token;
-
   if (!token) {
     return res.status(401).json({ message: 'Authentication required' });
   }

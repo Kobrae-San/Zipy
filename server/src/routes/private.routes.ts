@@ -3,6 +3,6 @@ import historyRouter from "./history.routes";
 
 const privateRouter = Router();
 
-privateRouter.use("/private", historyRouter);
+privateRouter.use(historyRouter);
 
 export default privateRouter;

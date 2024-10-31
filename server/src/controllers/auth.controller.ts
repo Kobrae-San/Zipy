@@ -86,10 +86,25 @@ export async function Login(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function Logout(req: Request, res: Response, next: NextFunction) {
+export function Logout(req: Request, res: Response, next: NextFunction) {
     res.clearCookie("jwt");
     return res.json({
       success: true,
       message: "Logout successful",
     });
+}
+
+export function isLogin(req: Request, res: Response, next: NextFunction) {
+  const token = req.cookies.token;
+  console.log(token)
+  if (!token) {
+      return res.status(401).json({
+          success: false,
+          message: "Not authenticated",
+      });
+  }
+  return res.status(200).json({
+    success: true,
+    message: "Authenticated",
+  })
 }
