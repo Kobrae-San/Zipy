@@ -11,6 +11,13 @@ export default defineConfig({
     },
   },
   server: {
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1',
+        changeOrigin: true,
+        secure: false,
+      }
+    },
     port: 4124,
     strictPort: true,
     host: true,

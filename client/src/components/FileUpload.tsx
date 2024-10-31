@@ -30,10 +30,13 @@ export default function FileUpload({ isAuthenticated }: FileUploadProps) {
         formData.append('file', file);
 
         try {
-            const response = await fetch('http://127.0.0.1/api/private/upload', {
+            const response = await fetch('/api/private/upload', {
                 method: 'POST',
+                credentials: 'include',
                 body: formData,
             });
+
+            console.log(response)
 
             if (!response.ok) {
                 throw new Error('Upload failed');
