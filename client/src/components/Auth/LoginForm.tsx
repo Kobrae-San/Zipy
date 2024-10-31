@@ -29,6 +29,7 @@ export default function LoginForm() {
                     variant: "destructive",
                     description: "Login failed",
                 })
+                return;
             }
 
             toast({
