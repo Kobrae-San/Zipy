@@ -57,15 +57,25 @@ export async function Login(req: Request, res: Response, next: NextFunction) {
       { expiresIn: JWT_EXPIRES_IN }
     );
 
-    return res.status(200).json({
-      success: true,
-      message: "Login successful",
-      token,
-      user: {
-        id: user.id,
-        nickname: user.nickname,
-      },
-    });
+    const timer = new Date();
+    timer.setMinutes(timer.getMinutes() + 5);
+
+    return res
+      .status(200)
+      .cookie("jwt", JSON.stringify(token), {
+        httpOnly: true,
+        expires: timer,
+      })
+      .json({
+        success: true,
+        message: "Login successful",
+        token,
+        user: {
+          id: user.id,
+          nickname: user.nickname,
+        },
+      })
+      .send();
   } catch (error) {
     next(error);
   }
