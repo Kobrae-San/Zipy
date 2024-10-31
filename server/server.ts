@@ -3,6 +3,7 @@ import router from "./src/routes/router";
 import { envConfig } from "./src/configs/env.config";
 import { connectionDatabase, client } from "./src/configs/database.config";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 envConfig();
 await connectionDatabase(client);
@@ -18,6 +19,8 @@ app.use(
     credentials: true,
   })
 );
+
+app.use(cookieParser());
 
 app.use(Express.json());
 app.use("/api", router);
