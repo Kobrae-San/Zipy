@@ -13,7 +13,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { Download, File, Trash2 } from 'lucide-react';
+import { Download, File, Share, Trash2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 
@@ -23,6 +23,27 @@ interface FileRecord {
     mime_type: string;
     file_data: Blob;
 }
+
+const mockFiles: FileRecord[] = [
+    {
+        file_name: "document.pdf",
+        file_size: 1024 * 1024 * 2.5, // 2.5 MB
+        mime_type: "application/pdf",
+        file_data: new Blob([""], { type: "application/pdf" })
+    },
+    {
+        file_name: "image.jpg",
+        file_size: 1024 * 512, // 512 KB
+        mime_type: "image/jpeg",
+        file_data: new Blob([""], { type: "image/jpeg" })
+    },
+    {
+        file_name: "spreadsheet.xlsx",
+        file_size: 1024 * 1024 * 1.2, // 1.2 MB
+        mime_type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        file_data: new Blob([""], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
+    }
+];
 
 function formatFileSize(bytes: number): string {
     const units = ['B', 'KB', 'MB', 'GB'];
@@ -42,35 +63,35 @@ function getFileIcon(mimeType: string) {
 }
 
 export default function HistoryList() {
-    const [files, setFiles] = useState<FileRecord[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [files, setFiles] = useState<FileRecord[]>(mockFiles);
+    const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        fetchFiles();
-    }, []);
+    // useEffect(() => {
+    //     fetchFiles();
+    // }, []);
 
-    const fetchFiles = async () => {
-        try {
-            const response = await fetch('http://127.0.0.1:3000/api/files', {
-                credentials: 'include'
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch files');
-            }
-
-            const data = await response.json();
-            setFiles(data);
-        } catch (error) {
-            toast({
-                title: "Error",
-                description: "Failed to load files",
-                variant: "destructive",
-            });
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    // const fetchFiles = async () => {
+    //     try {
+    //         const response = await fetch('http://127.0.0.1:3000/api/files', {
+    //             credentials: 'include'
+    //         });
+    //
+    //         if (!response.ok) {
+    //             throw new Error('Failed to fetch files');
+    //         }
+    //
+    //         const data = await response.json();
+    //         setFiles(data);
+    //     } catch (error) {
+    //         toast({
+    //             title: "Error",
+    //             description: "Failed to load files",
+    //             variant: "destructive",
+    //         });
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // };
 
     const handleDownload = async (fileName: string, fileData: Blob) => {
         try {
@@ -141,9 +162,9 @@ export default function HistoryList() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>File</TableHead>
-                                <TableHead>Type</TableHead>
-                                <TableHead className="text-right">Size</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
+                                <TableHead className="w-24">Type</TableHead>
+                                <TableHead className="w-24 text-left">Size</TableHead>
+                                <TableHead className="w-24 text-right">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -155,12 +176,19 @@ export default function HistoryList() {
                                             {file.file_name}
                                         </div>
                                     </TableCell>
-                                    <TableCell>{file.mime_type}</TableCell>
-                                    <TableCell className="text-right">
+                                    <TableCell className="text-left">{file.mime_type}</TableCell>
+                                    <TableCell className="text-left">
                                         {formatFileSize(file.file_size)}
                                     </TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                // onClick={() => handleDelete(file.file_name)}
+                                            >
+                                                <Share className="w-4 h-4" />
+                                            </Button>
                                             <Button
                                                 variant="ghost"
                                                 size="sm"
