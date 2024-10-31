@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { getFiles } from "../controllers/file.controller";
+import { getFiles, uploadFilesToDb } from "../controllers/file.controller";
 
 const fileRouter = Router();
 
-fileRouter.get("/files", getFiles);
+fileRouter.get("/history", getFiles);
+fileRouter.post("/upload", uploadFilesToDb);
 
 export default fileRouter;
