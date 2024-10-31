@@ -1,4 +1,4 @@
-import Express, { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import { storedFiles, uploadFiles } from "../models/file.model";
 
 export async function getFiles(
@@ -32,29 +32,43 @@ export async function uploadFilesToDb(
   res: Response,
   next: NextFunction
 ) {
-  try {
-    const { id_user, file_name, file_data, file_size, mime_type } = req.body;
-    const response = await uploadFiles(
-      id_user,
-      file_name,
-      file_data,
-      file_size,
-      mime_type
-    );
+  const file = req.file;
+  const id_user = req.body.user_id;
+  const file_name = file?.originalname;
+  const file_data = file?.buffer;
+  const file_size = file?.size;
+  const mime_type = file?.mimetype;
 
-    console.log(response.rows);
-    if (response.rows[0].id === 0) {
-      return res.status(500).json({
-        status: "Failed",
-        message: "File not uploaded.",
-      });
-    } else {
-      return res.status(200).json({
-        status: "Success",
-        message: "File successfully uploaded.",
-      });
+  if (id_user) {
+    console.log(id_user);
+  } else {
+    console.log(false);
+  }
+
+  if (id_user && file_name && file_data && file_size && mime_type) {
+    try {
+      const response = await uploadFiles(
+        id_user,
+        file_name,
+        file_data,
+        file_size,
+        mime_type
+      );
+
+      console.log(response.rows);
+      if (response.rows[0].id === 0) {
+        return res.status(500).json({
+          status: "Failed",
+          message: "File not uploaded.",
+        });
+      } else {
+        return res.status(200).json({
+          status: "Success",
+          message: "File successfully uploaded.",
+        });
+      }
+    } catch (error) {
+      next(`Error while trying to upload file: ${error}`);
     }
-  } catch (error) {
-    next(`Error while trying to upload file: ${error}`);
   }
 }

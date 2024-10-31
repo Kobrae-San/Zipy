@@ -13,7 +13,7 @@ export async function storedFiles(id_user: string) {
 export async function uploadFiles(
   id_user: number,
   file_name: string,
-  file_data: Blob,
+  file_data: Buffer,
   file_size: number,
   mime_type: string
 ) {
