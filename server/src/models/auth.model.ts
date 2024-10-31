@@ -11,7 +11,7 @@ export async function RegisterModel(nickname: string, password: string) {
 
 export async function LoginModel(nickname: string) {
   return client.query(
-    `SELECT * FROM users WHERE nickname = $1;
+    `SELECT id, nickname, password FROM users WHERE nickname = $1;
       `,
     [nickname]
   );
