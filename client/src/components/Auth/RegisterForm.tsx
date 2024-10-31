@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,7 @@ export default function RegisterForm() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const navigate = useNavigate();
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
         if (password !== confirmPassword) {
@@ -26,6 +26,7 @@ export default function RegisterForm() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body: JSON.stringify({ nickname, password }),
             });
 
@@ -34,7 +35,6 @@ export default function RegisterForm() {
                     variant: "destructive",
                     description: "Registration failed",
                 })
-                throw new Error('Registration failed');
             }
 
             const data = await response.json();

@@ -11,7 +11,7 @@ function App() {
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between items-center">
                         <div className="flex-shrink-0">
-                            <Link to="/" className="text-xl font-bold">
+                            <Link to="/" className="text-2xl font-bold">
                                 Zipy
                             </Link>
                         </div>

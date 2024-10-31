@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Link, useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import { FormEvent, useState } from "react";
 import { toast } from "@/hooks/use-toast.ts";
 
 export default function LoginForm() {
@@ -11,7 +11,7 @@ export default function LoginForm() {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
         try {
@@ -20,6 +20,7 @@ export default function LoginForm() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body: JSON.stringify({ nickname, password }),
             });
 
@@ -28,11 +29,10 @@ export default function LoginForm() {
                     variant: "destructive",
                     description: "Login failed",
                 })
-                throw new Error('Login failed');
             }
 
+
             const data = await response.json();
-            console.log(data);
 
             toast({
                 className: "bg-green-500 text-white",

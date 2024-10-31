@@ -60,17 +60,19 @@ export async function Login(req: Request, res: Response, next: NextFunction) {
     const timer = new Date();
     timer.setMinutes(timer.getMinutes() + 5);
 
+    res.cookie("token", token, {
+      secure: true,
+      partitioned: true,
+      sameSite: "none",
+      httpOnly: true,
+      maxAge: 60 * 5 * 1000,
+    })
+
     return res
       .status(200)
-      .cookie("token", token, {
-        sameSite: true,
-        httpOnly: true,
-        maxAge: 60 * 5 * 1000,
-      })
       .json({
         success: true,
         message: "Login successful",
-        token,
         user: {
           id: user.id,
           nickname: user.nickname,
@@ -79,4 +81,12 @@ export async function Login(req: Request, res: Response, next: NextFunction) {
   } catch (error) {
     next(error);
   }
+}
+
+export async function Logout(req: Request, res: Response, next: NextFunction) {
+    res.clearCookie("jwt");
+    return res.json({
+      success: true,
+      message: "Logout successful",
+    });
 }

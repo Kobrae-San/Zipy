@@ -24,6 +24,8 @@ services:
     volumes:
       - ./server:/app/
       - /app/node_modules
+    depends_on:
+      - database
 
   client:
     build:
@@ -36,6 +38,8 @@ services:
     volumes:
       - ./client:/app/
       - /app/node_modules
+    depends_on:
+      - server
 
 volumes:
   db_data:
