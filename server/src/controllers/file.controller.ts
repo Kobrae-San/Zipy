@@ -42,9 +42,10 @@ export async function uploadFilesToDb(
       mime_type
     );
 
+    console.log(response.rows);
     if (response.rows[0].id === 0) {
       return res.status(500).json({
-        status: "Success",
+        status: "Failed",
         message: "File not uploaded.",
       });
     } else {

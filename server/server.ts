@@ -15,10 +15,10 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:4124",
+    origin: ["http://localhost:4124", "http://127.0.0.1:4124"],
     credentials: true,
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization']
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
