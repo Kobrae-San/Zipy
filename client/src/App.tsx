@@ -8,6 +8,7 @@ import { AuthContext, UserContext } from "./hooks/context";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userId, setUserId] = useState<number | undefined>(undefined);
+
   return (
     <>
       <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
