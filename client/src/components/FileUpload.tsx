@@ -48,8 +48,6 @@ export default function FileUpload({ isAuthenticated }: FileUploadProps) {
         body: formData,
       });
 
-      console.log(response);
-
       if (!response.ok) {
         throw new Error("Upload failed");
       }
