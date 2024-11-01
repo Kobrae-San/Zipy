@@ -42,3 +42,25 @@ export async function deleteFileById(id: string) {
     [id]
   );
 }
+
+export async function storeToken(
+  file_id: string,
+  token: string,
+  expires_at: Date
+) {
+  return client.query(
+    `
+    INSERT INTO share_tokens (file_id, token, expires_at) VALUES ($1, $2, $3) 
+  `,
+    [file_id, token, expires_at]
+  );
+}
+
+export async function selectToken(token: string) {
+  return client.query(
+    `
+    SELECT file_id, expires_at FROM share_tokens WHERE token = $1    
+  `,
+    [token]
+  );
+}
