@@ -20,6 +20,7 @@ Zipy est une application web de gestion et de partage de fichiers qui permet aux
 ## 🚀 Technologies utilisées
 
 ### Backend
+
 - Node.js
 - TypeScript
 - Express.js
@@ -27,13 +28,15 @@ Zipy est une application web de gestion et de partage de fichiers qui permet aux
 - JWT
 
 ### Frontend
-- React 
+
+- React
 - TypeScript
 - Tailwind CSS
 - shadcn/ui
 - Vite
 
 ### DevOps
+
 - Docker
 - Docker Compose
 
@@ -41,25 +44,47 @@ Zipy est une application web de gestion et de partage de fichiers qui permet aux
 
 - Docker et Docker Compose
 
+## Environnements
+
+- Le Fichier .env doit se trouver à la racine du projet afin de concorder avec le path du fichier env.config dans le dossier server/src/configs.
+- Il faut modifier la variable DATABASE_HOST, afin qu'elle est la valeur "localhost" , comme ci dessous:
+-
+
+```
+DATABASE_HOST="localhost"
+DATABASE_USER="root" Le compose utilise ces variables pour la DB
+DATABASE_PASSWORD="root" Le compose utilise ces variables pour la DB
+DATABASE_NAME="zipy" // Le compose utilise ces variables pour la DB
+DATABASE_PORT=5432 //En correspondance avec le compose
+SERVER_PORT=3000 //En correspondance avec le compose et le Dockerfile
+JWT_EXPIRES_IN="1h"
+JWT_SECRET="ceciestunsecretbiengardetresbiengarde"
+
+```
+
 ## 🛠 Installation
 
 1. Clonez le repository
+
 ```bash
 git clone https://github.com/Kobrae-San/Zipy.git
 cd Zipy
 ```
 
 2. Build les images docker
+
 ```bash
 make build
 ```
 
 3. Démarrer l'application
+
 ```bash
 make up
 ```
 
 L'application sera disponible sur :
+
 - Frontend : http://localhost:4124
 - Backend : http://localhost:3000
 
