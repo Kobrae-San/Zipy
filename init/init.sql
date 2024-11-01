@@ -22,5 +22,5 @@ CREATE TABLE share_tokens (
   file_id INTEGER NOT NULL,
   token VARCHAR(255) NOT NULL,
   expires_at TIMESTAMP NOT NULL,
-  FOREIGN KEY (file_id) REFERENCES files(id)
+  FOREIGN KEY (file_id) REFERENCES files(id) ON DELETE CASCADE
 );
