@@ -2,11 +2,14 @@ import { Request, Response, NextFunction } from "express";
 import {
   deleteFileById,
   selectFileById,
+  selectToken,
   storedFiles,
+  storeToken,
   uploadFiles,
 } from "../models/file.model";
 
 import archiver from "archiver";
+import { v4 as uuidv4 } from "uuid";
 
 export async function getFiles(
   req: Request,
@@ -116,6 +119,64 @@ export async function downloadFile(
   }
 }
 
+export async function downloadFileWithToken(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const token = req.params.token;
+    const tokenResponse = await selectToken(token);
+
+    if (tokenResponse.rowCount === 0) {
+      return res.status(404).json({
+        status: "Failed",
+        message: "Token has Expired",
+      });
+    }
+
+    const { file_id, expires_at } = tokenResponse.rows[0];
+    if (new Date() > new Date(expires_at)) {
+      return res.status(404).json({
+        status: "Failed",
+        message: "Token has Expired",
+      });
+    }
+
+    const response = await selectFileById(file_id);
+
+    if (response.rows.length === 0) {
+      return res
+        .status(404)
+        .json({ status: "Failed", message: "File not Found" });
+    }
+
+    const file = response.rows[0];
+
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=${file.file_name}.zip`
+    );
+    res.setHeader("Content-Type", "application/zip");
+
+    const archive = archiver("zip", {
+      zlib: { level: 9 },
+    });
+
+    archive.on("error", (err) => {
+      throw err;
+    });
+
+    archive.pipe(res);
+
+    archive.append(file.file_data, { name: file.file_name });
+
+    await archive.finalize();
+  } catch (error) {
+    next(`Error while trying to download file: ${error}`);
+  }
+}
+
 export async function deleteFile(
   req: Request,
   res: Response,
@@ -138,5 +199,29 @@ export async function deleteFile(
     }
   } catch (error) {
     next(`Error while trying to delete file: ${error}`);
+  }
+}
+
+export async function generateShareLink(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const fileId = req.params.fileId;
+    const token = uuidv4();
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+    const response = await storeToken(fileId, token, expiresAt);
+
+    const shareLink = `${token}`;
+
+    return res.status(200).json({
+      status: "Success",
+      message: "Link successfully created.",
+      content: shareLink,
+    });
+  } catch (error) {
+    next(`Error while trying to generate share link: ${error}`);
   }
 }
