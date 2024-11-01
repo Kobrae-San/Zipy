@@ -20,7 +20,7 @@ export default function History() {
           }
         );
 
-        if (response.status === 401) {
+        if (response.status === 401 || !userId) {
           toast({
             variant: "destructive",
             description: "Invalid token",

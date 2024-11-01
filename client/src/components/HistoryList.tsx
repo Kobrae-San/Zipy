@@ -40,8 +40,40 @@ function getFileIcon(mimeType: string) {
 
 export default function HistoryList() {
   const [files, setFiles] = useState<FileRecord[]>([]);
+  const [shareLink, setShareLink] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { userId } = useContext(UserContext);
+
+  async function handleShare(fileId: number) {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:3000/api/private/share/${fileId}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to generate share link");
+      }
+
+      const result = await response.json();
+      setShareLink(result.content);
+
+      if (shareLink) {
+        await navigator.clipboard.writeText(
+          `http://localhost:4124/download/${shareLink}`
+        );
+        toast({
+          title: "Link copied to clipboard",
+          className: "bg-green-500 text-white",
+        });
+      }
+    } catch (error) {
+      console.error("Error while trying to generate share link:", error);
+    }
+  }
 
   async function getFilesHistory() {
     const response = await fetch(
@@ -58,7 +90,7 @@ export default function HistoryList() {
   async function handleDownload(fileId: number) {
     try {
       const response = await fetch(
-        `http://127.0.0.1:3000/api/file/download/${fileId}`,
+        `http://127.0.0.1:3000/api/private/download/${fileId}`,
         {
           method: "GET",
           credentials: "include",
@@ -138,7 +170,7 @@ export default function HistoryList() {
         <CardTitle>File History</CardTitle>
       </CardHeader>
       <CardContent>
-        {files.length === 0 ? (
+        {files === undefined || files.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
             No files uploaded yet
           </div>
@@ -170,7 +202,7 @@ export default function HistoryList() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        // onClick={() => handleDelete(file.file_name)}
+                        onClick={() => handleShare(file.id)}
                       >
                         <Share className="w-4 h-4" />
                       </Button>
