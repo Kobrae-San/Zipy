@@ -3,12 +3,36 @@ import { LoginModel, RegisterModel } from "../models/auth.model";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET, JWT_EXPIRES_IN } from "../configs/jwt.config";
 import bcrypt from "bcrypt";
+import { body, validationResult } from "express-validator";
+
+export const validateRegister = [
+  body("nickname").trim().escape(),
+  body("password").trim().escape(),
+];
+
+export const validateLogin = [
+  body("nickname")
+    .trim()
+    .notEmpty()
+    .withMessage("Nickname is required")
+    .escape(),
+  body("password")
+    .trim()
+    .notEmpty()
+    .withMessage("Password is required")
+    .escape(),
+];
 
 export async function Register(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   try {
     const { nickname, password } = req.body;
     const passwordToRegister = bcrypt.hashSync(password, 10);
@@ -24,6 +48,10 @@ export async function Register(
 }
 
 export async function Login(req: Request, res: Response, next: NextFunction) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   try {
     const { nickname, password } = req.body;
     if (!nickname || !password) {
@@ -69,41 +97,39 @@ export async function Login(req: Request, res: Response, next: NextFunction) {
       sameSite: "none",
       httpOnly: true,
       maxAge: 60 * 500 * 1000,
-    })
+    });
 
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "Login successful",
-        user: {
-          id: user.id,
-          nickname: user.nickname,
-        },
-      });
+    return res.status(200).json({
+      success: true,
+      message: "Login successful",
+      user: {
+        id: user.id,
+        nickname: user.nickname,
+      },
+    });
   } catch (error) {
     next(error);
   }
 }
 
 export function Logout(req: Request, res: Response, next: NextFunction) {
-    res.clearCookie("jwt");
-    return res.json({
-      success: true,
-      message: "Logout successful",
-    });
+  res.clearCookie("jwt");
+  return res.json({
+    success: true,
+    message: "Logout successful",
+  });
 }
 
 export function isLogin(req: Request, res: Response, next: NextFunction) {
   const token = req.cookies.token;
   if (!token) {
-      return res.status(401).json({
-          success: false,
-          message: "Not authenticated",
-      });
+    return res.status(401).json({
+      success: false,
+      message: "Not authenticated",
+    });
   }
   return res.status(200).json({
     success: true,
     message: "Authenticated",
-  })
+  });
 }
