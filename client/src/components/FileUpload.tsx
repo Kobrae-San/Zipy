@@ -41,8 +41,6 @@ export default function FileUpload({ isAuthenticated }: FileUploadProps) {
       formData.append("user_id", userId.toString());
     }
 
-    console.log(userId);
-
     try {
       const response = await fetch("http://127.0.0.1:3000/api/private/upload", {
         method: "POST",
