@@ -17,7 +17,7 @@ export default function LoginForm() {
   const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
   const { setIsLoggedIn } = useContext(AuthContext);
-  const { userId, setUserId } = useContext(UserContext);
+  const { setUserId } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent) => {
@@ -47,7 +47,6 @@ export default function LoginForm() {
       if (resultUserId) {
         setIsLoggedIn(true);
         setUserId(resultUserId);
-        console.log(userId);
       }
 
       toast({
