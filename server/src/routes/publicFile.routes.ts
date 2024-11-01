@@ -1,8 +1,11 @@
 import { Router } from "express";
-import { downloadFileWithToken } from "../controllers/file.controller";
+import {
+  downloadFileWithToken,
+  validateToken,
+} from "../controllers/file.controller";
 
 const publicFileRouter = Router();
 
-publicFileRouter.get("/download/:token", downloadFileWithToken);
+publicFileRouter.get("/download/:token", validateToken, downloadFileWithToken);
 
 export default publicFileRouter;

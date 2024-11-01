@@ -7,9 +7,13 @@ import {
   storeToken,
   uploadFiles,
 } from "../models/file.model";
-
+import { param, validationResult } from "express-validator";
 import archiver from "archiver";
 import { v4 as uuidv4 } from "uuid";
+
+export const validateToken = [
+  param("token").trim().escape().isUUID().withMessage("Invalid token format"),
+];
 
 export async function getFiles(
   req: Request,
@@ -19,8 +23,6 @@ export async function getFiles(
   try {
     const { userId } = req.params;
     const response = await storedFiles(userId);
-
-    console.log(userId);
 
     if (response.rowCount === 0) {
       return res.status(200).json({
@@ -124,6 +126,10 @@ export async function downloadFileWithToken(
   res: Response,
   next: NextFunction
 ) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   try {
     const token = req.params.token;
     const tokenResponse = await selectToken(token);
